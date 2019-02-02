@@ -1,0 +1,34 @@
+---
+language: python
+services: docker
+
+install:
+  # Install Ansible.
+  - pip install ansible docker
+  - export ANSIBLE_FORCE_COLOR=true
+
+  # Install role dependencies.
+  - ansible-galaxy install -r requirements.yml
+
+script:
+  # Build the container.
+  - ansible-playbook main.yml
+
+  # Verify the container runs and has the correct PHP version.
+  - docker run -d --name=fathom -p 9000:9000 geerlingguy/fathom:latest fathom server
+  - curl http://localhost:9000/
+
+after_success:
+  - |
+    if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+      # Log into Docker Hub.
+      echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      # Push latest tag.
+      docker push geerlingguy/fathom:latest
+
+      # Push current version tag.
+      fathom_version=$(docker run --rm geerlingguy/fathom:latest bash -c "fathom --version" | awk '{print $3}' | sed 's/.$//')
+      docker tag geerlingguy/fathom:latest geerlingguy/fathom:${fathom_version}
+      docker push geerlingguy/fathom:${fathom_version}
+    fi
