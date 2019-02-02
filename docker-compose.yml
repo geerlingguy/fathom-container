@@ -1,0 +1,13 @@
+---
+version: "3"
+
+services:
+  fathom:
+    image: geerlingguy/fathom:latest
+    container_name: fathom
+    ports:
+      - "9000:9000"
+    restart: always
+    # See 'Custom PHP codebase' for instructions for volumes.
+    volumes:
+      - ./fathom:/opt/fathom:rw,delegated
