@@ -16,19 +16,8 @@ script:
 
   # Verify the container runs and has the correct PHP version.
   - docker run -d --name=fathom -p 9000:9000 geerlingguy/fathom:latest
-  - >
-    attempt_counter=0
-    max_attempts=5
-    until $(curl --output /dev/null --silent -k --head http://localhost:9000/); do
-        if [ ${attempt_counter} -eq ${max_attempts} ];then
-            echo "Timeout occurred while waiting for Fathom to start."
-            exit 1
-        fi
-
-        printf '.'
-        attempt_counter=$(($attempt_counter+1))
-        sleep 5
-    done
+  - sleep 5
+  - curl localhost:9000
 
 after_success:
   - |
