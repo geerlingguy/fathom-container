@@ -15,8 +15,8 @@ script:
   - ansible-playbook main.yml
 
   # Verify the container runs and has the correct PHP version.
-  - docker run -d --name=fathom -p 9000:9000 geerlingguy/fathom:latest fathom server
-  - curl http://localhost:9000/
+  - docker run -d --name=fathom -p 9000:9000 geerlingguy/fathom:latest
+  - curl localhost:9000
 
 after_success:
   - |
