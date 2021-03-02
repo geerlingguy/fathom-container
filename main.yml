@@ -21,7 +21,7 @@
     - name: Make the latest version of the base image available locally.
       docker_image:
         name: '{{ base_image }}'
-        force: yes
+        source: pull
 
     - name: Create the Docker container.
       docker_container:
