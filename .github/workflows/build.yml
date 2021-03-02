@@ -1,0 +1,81 @@
+---
+name: Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "15 2 * * 0"
+
+env:
+  ANSIBLE_FORCE_COLOR: true
+
+jobs:
+  # Test the images build and work correctly.
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install prerequisites.
+        run: pip3 install ansible docker
+
+      - name: Install role dependencies.
+        run: ansible-galaxy install -r requirements.yml
+
+      - name: Build the image.
+        run: ansible-playbook main.yml
+
+      - name: Run the image and test it.
+        run: |
+          docker run -d --name=fathom -p 9000:9000 geerlingguy/fathom:latest
+          sleep 5
+          curl localhost:9000
+
+      - name: Store image artifact.
+        uses: ishworkh/docker-image-artifact-upload@v1
+        with:
+          image: "geerlingguy/fathom:latest"
+
+  # If on master branch, build and release images.
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download image artifact.
+        uses: ishworkh/docker-image-artifact-download@v1
+        with:
+          image: "geerlingguy/fathom:latest"
+
+      - name: List all images for debugging.
+        run: docker images
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Push images.
+        run: |
+          # Push latest tag.
+          docker push geerlingguy/fathom:latest
+
+          # Push current version tag.
+          fathom_version=$(docker run --rm geerlingguy/fathom:latest bash -c "fathom --version" | awk '{print $3}' | sed 's/.$//')
+          docker tag geerlingguy/fathom:latest geerlingguy/fathom:${fathom_version}
+          docker push geerlingguy/fathom:${fathom_version}
