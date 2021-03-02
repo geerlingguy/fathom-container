@@ -28,6 +28,7 @@
         image: '{{ base_image }}'
         name: '{{ container_name }}'
         command: sleep infinity
+        container_default_behavior: compatibility
 
     - name: Add the newly created container to the inventory.
       add_host:
