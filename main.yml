@@ -4,18 +4,13 @@
   gather_facts: no
 
   vars:
-    base_image: centos:7
+    base_image: rockylinux:9
     container_name: fathom_build_container
     image_namespace: geerlingguy
     image_name: fathom
 
     # Fathom settings.
     fathom_manage_service: false
-
-    # Handy utilities.
-    handy_utilities:
-      - curl
-      - unzip
 
   pre_tasks:
     - name: Make the latest version of the base image available locally.
@@ -43,11 +38,10 @@
       delegate_to: '{{ container_name }}'
 
   post_tasks:
-    - name: Install handy utilities.
+    - name: Install dependencies.
       package:
-        name: "{{ item }}"
+        name: unzip
         state: present
-      with_items: "{{ handy_utilities }}"
       delegate_to: '{{ container_name }}'
 
     - name: Commit the container.

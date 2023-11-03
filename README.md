@@ -77,7 +77,7 @@ Once the image is built, you can run `docker images` to see the `fathom` image t
 
 ### Push the image to Docker Hub
 
-See the `.travis.yml` file in this repository for how it pushes all the tagged images automatically on any commit to the `master` branch.
+See the HitHub Actions workflow file in this repository for how it pushes all the tagged images automatically on any commit to the `master` branch.
 
 ## License
 
