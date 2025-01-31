@@ -1,6 +1,6 @@
 # Fathom Container (Built with Ansible)
 
-[![CI](https://github.com/geerlingguy/fathom-container/actions/workflows/build.yml/badge.svg)](https://github.com/geerlingguy/fathom-container/actions/workflows/build.yml) [![Docker pulls](https://img.shields.io/docker/pulls/geerlingguy/fathom)](https://hub.docker.com/r/geerlingguy/fathom/)
+[![Build](https://github.com/geerlingguy/fathom-container/actions/workflows/build.yml/badge.svg)](https://github.com/geerlingguy/fathom-container/actions/workflows/build.yml) [![Docker pulls](https://img.shields.io/docker/pulls/geerlingguy/fathom)](https://hub.docker.com/r/geerlingguy/fathom/)
 
 This project is composed of three main parts:
 
