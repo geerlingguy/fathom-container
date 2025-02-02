@@ -42,7 +42,7 @@ jobs:
           curl localhost:9000
 
       - name: Store image artifact.
-        uses: ishworkh/docker-image-artifact-upload@v1
+        uses: ishworkh/container-image-artifact-upload@v2.0.0
         with:
           image: "geerlingguy/fathom:latest"
 
@@ -57,7 +57,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Download image artifact.
-        uses: ishworkh/docker-image-artifact-download@v1
+        uses: ishworkh/container-image-artifact-download@v2.0.0
         with:
           image: "geerlingguy/fathom:latest"
 
